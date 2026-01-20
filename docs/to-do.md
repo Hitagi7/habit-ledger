@@ -9,27 +9,27 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Next.js project initialized (App Router)
 - [x] TypeScript configured
 - [x] Tailwind CSS configured
-- [ ] Supabase client setup
-- [ ] Supabase Auth integration
+- [x] Supabase client setup
+- [x] Supabase Auth integration
 - [ ] Google Gemini API integration
-- [ ] Environment variables configured (.env.local)
+- [x] Environment variables configured (.env.local)
 
 ---
 
 ## Authentication & Security
 
-- [ ] Supabase Auth setup
-- [ ] User sign-in page
-- [ ] User sign-up page
+- [x] Supabase Auth setup
+- [x] User sign-in page
+- [x] User sign-up page
 - [ ] Password reset flow
-- [ ] Protected routes (authenticated dashboard)
+- [x] Protected routes (authenticated dashboard)
 - [ ] Row-level security (RLS) policies for user data isolation
 
 ---
 
 ## Database Schema
 
-- [ ] `users` table (Supabase Auth handles this)
+- [x] `users` table (Supabase Auth handles this)
 - [ ] `categories` table
 - [ ] `transactions` table
 - [ ] `budgets` table
@@ -43,12 +43,12 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ### Public Pages
 - [x] Landing/marketing page
-- [ ] Login page
-- [ ] Sign-up page
+- [x] Login page
+- [x] Sign-up page
 
 ### Authenticated Dashboard
-- [ ] Dashboard layout with navigation
-- [ ] Finance overview page
+- [x] Dashboard layout with navigation
+- [x] Finance overview page (placeholder)
 - [ ] Habits overview page
 
 ---
@@ -122,7 +122,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 ## Deployment
 
 - [ ] Vercel deployment configuration
-- [ ] Supabase production project setup
+- [x] Supabase production project setup
 - [ ] Environment variables on Vercel
 - [ ] Production build testing
 
