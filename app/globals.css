@@ -1,8 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark mode as default */
+  --background: #0a0a0f;
+  --foreground: #ffffff;
+
+  /* Primary palette - Vibrant Orange (matching cs-stats-hub) */
+  --color-primary: #ff6b00;
+  --color-primary-light: #ff8533;
+  --color-primary-dark: #cc5500;
+
+  /* Secondary palette - Cyan */
+  --color-secondary: #06b6d4;
+  --color-secondary-light: #22d3ee;
+
+  /* Surface colors */
+  --color-surface: #18181b;
+  --color-surface-elevated: #27272a;
+
+  /* Text colors */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #ff6b00 0%, #ff8533 100%);
+  --gradient-accent: linear-gradient(135deg, #ff6b00 0%, #f3b50b 100%);
+  --gradient-hero: radial-gradient(ellipse at top, rgba(255, 107, 0, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+    #0a0a0f;
+
+  /* Shadows */
+  --shadow-primary: 0 4px 14px rgba(255, 107, 0, 0.4);
+  --shadow-primary-hover: 0 6px 20px rgba(255, 107, 0, 0.5);
 }
 
 @theme inline {
@@ -12,15 +42,123 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Primary button - Orange brand color */
+.btn-primary {
+  background: var(--gradient-primary);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary-hover);
+}
+
+/* Secondary button - Ghost style */
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Tertiary button - Orange Yellow Style */
+.btn-tertiary {
+  background: var(--gradient-accent);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-tertiary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary-hover);
+}
+
+/* Card hover effect */
+.feature-card {
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* Floating animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pulse animation for CTAs */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+/* Ambient glow effects */
+.glow-orange {
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.3) 0%, transparent 70%);
+}
+
+.glow-cyan {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
 }
