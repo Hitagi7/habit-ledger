@@ -23,19 +23,19 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] User sign-up page
 - [ ] Password reset flow
 - [x] Protected routes (authenticated dashboard)
-- [ ] Row-level security (RLS) policies for user data isolation
+- [x] Row-level security (RLS) policies for user data isolation
 
 ---
 
 ## Database Schema
 
 - [x] `users` table (Supabase Auth handles this)
-- [ ] `categories` table
-- [ ] `transactions` table
-- [ ] `budgets` table
-- [ ] `habits` table
-- [ ] `habit_logs` table
-- [ ] Database migrations setup
+- [x] `categories` table
+- [x] `transactions` table
+- [x] `budgets` table
+- [x] `habits` table
+- [x] `habit_logs` table
+- [x] Database migrations setup
 
 ---
 
@@ -55,12 +55,12 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ## Transaction Tracking (Finance)
 
-- [ ] Add transaction form
-- [ ] Transaction list view
-- [ ] Transaction categories management
-- [ ] Tags support for transactions
+- [x] Add transaction form
+- [x] Transaction list view
+- [x] Transaction categories management
+- [x] Tags support for transactions
 - [ ] Transaction filters (by category, date, tags)
-- [ ] Edit/delete transactions
+- [x] Edit/delete transactions
 - [ ] Category breakdown view
 
 ---
