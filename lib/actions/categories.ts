@@ -51,7 +51,7 @@ export async function createCategory(formData: {
             user_id: user.id,
             name: formData.name,
             type: formData.type,
-            icon: formData.icon || "📁",
+            icon: formData.icon || null,
             color: formData.color || "#ff6b00",
         })
         .select()

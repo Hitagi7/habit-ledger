@@ -1,12 +1,9 @@
 import { getTransactions, getTransactionStats } from "@/lib/actions/transactions";
-import { getCategories, seedDefaultCategories } from "@/lib/actions/categories";
+import { getCategories } from "@/lib/actions/categories";
 import TransactionList from "@/components/features/transactions/TransactionList";
 import TransactionForm from "@/components/features/transactions/TransactionForm";
 
 export default async function TransactionsPage() {
-    // Seed default categories for new users
-    await seedDefaultCategories();
-
     const [transactionsResult, categoriesResult, statsResult] = await Promise.all([
         getTransactions(),
         getCategories(),
