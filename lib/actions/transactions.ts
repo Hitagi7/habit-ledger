@@ -17,6 +17,7 @@ export async function getTransactions(filters?: {
         return { error: "Not authenticated", data: null };
     }
 
+    // Table from supabase
     let query = supabase
         .from("transactions")
         .select(`
@@ -29,7 +30,7 @@ export async function getTransactions(filters?: {
         type
       )
     `)
-        .eq("user_id", user.id)
+        .eq("user_id", user.id) // Equality check to confirm the user id
         .order("date", { ascending: false });
 
     // Apply filters
@@ -120,8 +121,8 @@ export async function updateTransaction(
             tags: formData.tags,
             updated_at: new Date().toISOString(),
         })
-        .eq("id", id)
-        .eq("user_id", user.id);
+        .eq("id", id)   // Equality check to confirm the transaction id
+        .eq("user_id", user.id); // Equality check to confirm the user id
 
     if (error) {
         return { error: error.message, success: false };
@@ -181,9 +182,10 @@ export async function getTransactionStats() {
         return { error: error.message, data: null };
     }
 
+    // Calculate the sum for income and expenses
     const income = data
         .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + Number(t.amount), 0);
+        .reduce((sum, t) => sum + Number(t.amount), 0); // Something like for each, it processes each elements
 
     const expenses = data
         .filter((t) => t.type === "expense")
