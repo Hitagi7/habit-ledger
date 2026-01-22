@@ -201,3 +201,78 @@ export async function getTransactionStats() {
         },
     };
 }
+
+// Get category breakdown for expense/income
+export async function getCategoryBreakdown(type: "income" | "expense" = "expense") {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Not authenticated", data: null };
+    }
+
+    // Get current month's start and end dates
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
+
+    const { data, error } = await supabase
+        .from("transactions")
+        .select(`
+            amount,
+            category_id,
+            categories (
+                id,
+                name
+            )
+        `)
+        .eq("user_id", user.id)
+        .eq("type", type)
+        .gte("date", startOfMonth)
+        .lte("date", endOfMonth);
+
+    if (error) {
+        return { error: error.message, data: null };
+    }
+
+    // Group by category
+    const categoryTotals: Record<string, { name: string; amount: number; count: number }> = {};
+    let totalAmount = 0;
+
+    for (const transaction of data) {
+        const amount = Number(transaction.amount);
+        totalAmount += amount;
+
+        const catId = transaction.category_id || "uncategorized";
+        // Handle categories - Supabase returns single object for one-to-one relation
+        const category = transaction.categories as unknown as { id: string; name: string } | null;
+        const catName = category?.name || "Uncategorized";
+
+        if (!categoryTotals[catId]) {
+            categoryTotals[catId] = { name: catName, amount: 0, count: 0 };
+        }
+        categoryTotals[catId].amount += amount;
+        categoryTotals[catId].count += 1;
+    }
+
+    // Convert to array with percentages, sorted by amount
+    const breakdown = Object.entries(categoryTotals)
+        .map(([id, { name, amount, count }]) => ({
+            id,
+            name,
+            amount,
+            count,
+            percentage: totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0,
+        }))
+        .sort((a, b) => b.amount - a.amount);
+
+    return {
+        error: null,
+        data: {
+            breakdown,
+            total: totalAmount,
+            type,
+        },
+    };
+}
+

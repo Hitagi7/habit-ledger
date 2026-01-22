@@ -59,9 +59,9 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Transaction list view
 - [x] Transaction categories management
 - [x] Tags support for transactions
-- [ ] Transaction filters (by category, date, tags)
+- [x] Transaction filters (by type, category, date range)
 - [x] Edit/delete transactions
-- [ ] Category breakdown view
+- [x] Category breakdown view (with expense/income tabs)
 
 ---
 
@@ -77,14 +77,16 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ## Habit Tracking
 
-- [x] Create habit (daily/weekly/custom frequency)
+- [x] Create habit (daily/weekly frequency)
 - [x] Habit list view
-- [x] Log habit completion
+- [x] Habit categories support
+- [x] Log habit completion (toggle with optimistic UI)
 - [x] Streak tracking
 - [x] Completion rate calculation
+- [x] Stats cards (Total, Completed Today, Streak, Rate)
+- [x] Edit/delete habits (with confirmation modal)
 - [ ] Progress charts for habits
 - [ ] Habit consistency graphs
-- [x] Edit/delete habits
 
 ---
 
