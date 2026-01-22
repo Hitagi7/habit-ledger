@@ -67,11 +67,11 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ## Budget Management
 
-- [ ] Create budget per category
-- [ ] Set monthly/weekly limits
-- [ ] Overspend alerts/notifications
-- [ ] Budget progress visualization
-- [ ] Edit/delete budgets
+- [x] Create budget per category
+- [x] Set monthly/weekly limits
+- [x] Overspend alerts/notifications (visual indicator on budget cards)
+- [x] Budget progress visualization
+- [x] Edit/delete budgets
 
 ---
 
@@ -85,8 +85,8 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Completion rate calculation
 - [x] Stats cards (Total, Completed Today, Streak, Rate)
 - [x] Edit/delete habits (with confirmation modal)
-- [ ] Progress charts for habits
-- [ ] Habit consistency graphs
+- [x] Progress charts for habits
+- [x] Habit consistency graphs
 
 ---
 

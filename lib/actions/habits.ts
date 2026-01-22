@@ -32,8 +32,7 @@ export async function getHabits() {
         .from("habit_logs")
         .select("habit_id")
         .eq("user_id", user.id)
-        .gte("completed_at", `${today}T00:00:00`)
-        .lt("completed_at", `${today}T23:59:59`);
+        .eq("date", today);
 
     const completedToday = new Set(todaysLogs?.map((l) => l.habit_id) || []);
 
@@ -151,10 +150,13 @@ export async function logHabit(habitId: string, notes?: string) {
         return { error: "Not authenticated", success: false };
     }
 
+    const today = new Date().toISOString().split("T")[0];
+
     const { error } = await supabase.from("habit_logs").insert({
         habit_id: habitId,
         user_id: user.id,
-        completed_at: new Date().toISOString(),
+        date: today,
+        completed: true,
         notes: notes || null,
     });
 
@@ -183,8 +185,7 @@ export async function unlogHabit(habitId: string) {
         .delete()
         .eq("habit_id", habitId)
         .eq("user_id", user.id)
-        .gte("completed_at", `${today}T00:00:00`)
-        .lt("completed_at", `${today}T23:59:59`);
+        .eq("date", today);
 
     if (error) {
         return { error: error.message, success: false };
@@ -230,8 +231,7 @@ export async function getHabitStats() {
         .from("habit_logs")
         .select("habit_id")
         .eq("user_id", user.id)
-        .gte("completed_at", `${today}T00:00:00`)
-        .lt("completed_at", `${today}T23:59:59`);
+        .eq("date", today);
 
     const completedToday = new Set(todaysLogs?.map((l) => l.habit_id) || []);
 
@@ -241,9 +241,9 @@ export async function getHabitStats() {
 
     const { data: recentLogs } = await supabase
         .from("habit_logs")
-        .select("habit_id, completed_at")
+        .select("habit_id, date")
         .eq("user_id", user.id)
-        .gte("completed_at", thirtyDaysAgo.toISOString());
+        .gte("date", thirtyDaysAgo.toISOString().split("T")[0]);
 
     // Calculate completion rate (logs / expected completions)
     const totalExpected = habits.length * 30; // Simplified: all daily for 30 days
@@ -276,10 +276,10 @@ export async function getHabitStats() {
 async function calculateStreak(supabase: Awaited<ReturnType<typeof createClient>>, userId: string, habitId: string): Promise<number> {
     const { data: logs } = await supabase
         .from("habit_logs")
-        .select("completed_at")
+        .select("date")
         .eq("user_id", userId)
         .eq("habit_id", habitId)
-        .order("completed_at", { ascending: false })
+        .order("date", { ascending: false })
         .limit(100);
 
     if (!logs || logs.length === 0) return 0;
@@ -289,7 +289,7 @@ async function calculateStreak(supabase: Awaited<ReturnType<typeof createClient>
     today.setHours(0, 0, 0, 0);
 
     // Get unique dates
-    const logDates = [...new Set(logs.map((l) => l.completed_at.split("T")[0]))];
+    const logDates = [...new Set(logs.map((l) => l.date))];
 
     for (let i = 0; i < logDates.length; i++) {
         const expectedDate = new Date(today);
@@ -304,4 +304,77 @@ async function calculateStreak(supabase: Awaited<ReturnType<typeof createClient>
     }
 
     return streak;
+}
+
+// Get habit consistency data (aggregated completion across all habits per day)
+export async function getHabitConsistency(days: number = 90) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Not authenticated", data: null };
+    }
+
+    // Get all habits
+    const { data: habits } = await supabase
+        .from("habits")
+        .select("id, created_at")
+        .eq("user_id", user.id);
+
+    if (!habits || habits.length === 0) {
+        return { error: null, data: [] };
+    }
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    // Get all logs in the period
+    const { data: logs, error } = await supabase
+        .from("habit_logs")
+        .select("habit_id, date")
+        .eq("user_id", user.id)
+        .gte("date", startDate.toISOString().split("T")[0]);
+
+    if (error) {
+        return { error: error.message, data: null };
+    }
+
+    // Group logs by date
+    const logsByDate: Record<string, Set<string>> = {};
+    for (const log of logs || []) {
+        const dateStr = log.date;
+        if (!logsByDate[dateStr]) {
+            logsByDate[dateStr] = new Set();
+        }
+        logsByDate[dateStr].add(log.habit_id);
+    }
+
+    // Generate consistency data for each day
+    const consistencyData = [];
+    for (let i = days - 1; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split("T")[0];
+
+        // Count habits that existed on this date
+        const activeHabits = habits.filter(h => {
+            const createdDate = h.created_at.split("T")[0];
+            return createdDate <= dateStr;
+        });
+
+        const completedCount = logsByDate[dateStr]?.size || 0;
+        const totalHabits = activeHabits.length;
+        const percentage = totalHabits > 0 ? Math.round((completedCount / totalHabits) * 100) : 0;
+
+        consistencyData.push({
+            date: dateStr,
+            completed: completedCount,
+            total: totalHabits,
+            percentage,
+            dayOfWeek: date.getDay(),
+            week: Math.floor(i / 7),
+        });
+    }
+
+    return { error: null, data: consistencyData };
 }

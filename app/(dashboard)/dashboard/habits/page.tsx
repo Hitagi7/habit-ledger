@@ -1,13 +1,15 @@
-import { getHabits, getHabitStats } from "@/lib/actions/habits";
+import { getHabits, getHabitStats, getHabitConsistency } from "@/lib/actions/habits";
 import { getCategories } from "@/lib/actions/categories";
 import HabitCard from "@/components/features/habits/HabitCard";
 import HabitForm from "@/components/features/habits/HabitForm";
+import HabitConsistencyGraph from "@/components/features/habits/HabitConsistencyGraph";
 
 export default async function HabitsPage() {
-    const [habitsResult, statsResult, categoriesResult] = await Promise.all([
+    const [habitsResult, statsResult, categoriesResult, consistencyResult] = await Promise.all([
         getHabits(),
         getHabitStats(),
         getCategories("habit"),
+        getHabitConsistency(90),
     ]);
 
     const habits = habitsResult.data || [];
@@ -18,6 +20,7 @@ export default async function HabitsPage() {
         longestStreak: 0,
         averageCompletion: 0
     };
+    const consistencyData = consistencyResult.data || [];
 
     return (
         <div className="space-y-6">
@@ -54,6 +57,11 @@ export default async function HabitsPage() {
                 </div>
             </div>
 
+            {/* Habit Consistency Graph */}
+            {habits.length > 0 && (
+                <HabitConsistencyGraph data={consistencyData} />
+            )}
+
             {/* Habit List */}
             <div className="bg-zinc-900/50 border border-white/10 rounded-xl">
                 <div className="p-4 border-b border-white/10">
@@ -83,3 +91,4 @@ export default async function HabitsPage() {
         </div>
     );
 }
+
