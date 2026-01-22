@@ -118,7 +118,7 @@ export default function TransactionForm({ categories }: TransactionFormProps) {
                     />
 
                     {/* Modal Content */}
-                    <div className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-md mx-4">
+                    <div className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg min-h-[520px] mx-4 max-h-[90vh] overflow-y-auto scrollbar-thin">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">Add Transaction</h2>
                             <button

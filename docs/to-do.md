@@ -49,7 +49,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 ### Authenticated Dashboard
 - [x] Dashboard layout with navigation
 - [x] Finance overview page (placeholder)
-- [ ] Habits overview page
+- [x] Habits overview page
 
 ---
 
@@ -77,14 +77,14 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ## Habit Tracking
 
-- [ ] Create habit (daily/weekly/custom frequency)
-- [ ] Habit list view
-- [ ] Log habit completion
-- [ ] Streak tracking
-- [ ] Completion rate calculation
+- [x] Create habit (daily/weekly/custom frequency)
+- [x] Habit list view
+- [x] Log habit completion
+- [x] Streak tracking
+- [x] Completion rate calculation
 - [ ] Progress charts for habits
 - [ ] Habit consistency graphs
-- [ ] Edit/delete habits
+- [x] Edit/delete habits
 
 ---
 

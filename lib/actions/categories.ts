@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 // Get all categories for the current user
-export async function getCategories(type?: "income" | "expense") {
+export async function getCategories(type?: "income" | "expense" | "habit") {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -34,7 +34,7 @@ export async function getCategories(type?: "income" | "expense") {
 // Create a new category
 export async function createCategory(formData: {
     name: string;
-    type: "income" | "expense";
+    type: "income" | "expense" | "habit";
     icon?: string;
     color?: string;
 }) {
@@ -62,6 +62,7 @@ export async function createCategory(formData: {
     }
 
     revalidatePath("/dashboard/transactions");
+    revalidatePath("/dashboard/habits");
     return { error: null, success: true, data };
 }
 
@@ -99,6 +100,7 @@ export async function updateCategory(
     }
 
     revalidatePath("/dashboard/transactions");
+    revalidatePath("/dashboard/habits");
     return { error: null, success: true };
 }
 
@@ -122,6 +124,7 @@ export async function deleteCategory(id: string) {
     }
 
     revalidatePath("/dashboard/transactions");
+    revalidatePath("/dashboard/habits");
     return { error: null, success: true };
 }
 
