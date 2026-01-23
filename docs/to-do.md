@@ -11,7 +11,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Tailwind CSS configured
 - [x] Supabase client setup
 - [x] Supabase Auth integration
-- [ ] Google Gemini API integration
+- [x] Google Gemini API integration
 - [x] Environment variables configured (.env.local)
 
 ---
@@ -21,7 +21,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Supabase Auth setup
 - [x] User sign-in page
 - [x] User sign-up page
-- [ ] Password reset flow
+- [x] Password reset flow
 - [x] Protected routes (authenticated dashboard)
 - [x] Row-level security (RLS) policies for user data isolation
 
@@ -50,6 +50,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Dashboard layout with navigation
 - [x] Finance overview page (placeholder)
 - [x] Habits overview page
+- [x] Settings page (Currency, Password)
 
 ---
 
@@ -102,7 +103,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ## AI Insights (Gemini Integration)
 
-- [ ] Gemini API connection
+- [x] Gemini API connection
 - [ ] Weekly spending & habit summary generation
 - [ ] Monthly summary generation
 - [ ] Smart suggestions for budget adjustments
