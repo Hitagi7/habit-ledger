@@ -1,14 +1,12 @@
 "use server";
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initialize the Gemini client
-const genAI = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY!,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 // Default model for text generation
-const DEFAULT_MODEL = "gemini-2.0-flash";
+const DEFAULT_MODEL = "gemini-2.5-flash";
 
 /**
  * Generate text content from a prompt
@@ -22,15 +20,15 @@ export async function generateContent(prompt: string): Promise<{
             return { data: null, error: "Gemini API key not configured" };
         }
 
-        const response = await genAI.models.generateContent({
-            model: DEFAULT_MODEL,
-            contents: prompt,
-        });
+        const model = genAI.getGenerativeModel({ model: DEFAULT_MODEL });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
 
-        return { data: response.text || null, error: null };
-    } catch (error) {
+        return { data: text || null, error: null };
+    } catch (error: any) {
         console.error("Gemini API error:", error);
-        return { data: null, error: "Failed to generate content" };
+        return { data: null, error: error.message || "Failed to generate content" };
     }
 }
 

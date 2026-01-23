@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { generateDashboardInsightsAction } from "@/lib/actions/dashboard";
 import { useCurrency } from "@/lib/contexts/CurrencyContext";
+import ReactMarkdown from "react-markdown";
 
 export default function DashboardAI() {
     const [insight, setInsight] = useState<string | null>(null);
@@ -62,10 +63,8 @@ export default function DashboardAI() {
                     <button onClick={handleGenerate} className="block mt-2 text-xs underline hover:cursor-pointer">Try Again</button>
                 </div>
             ) : insight ? (
-                <div className="prose prose-invert prose-sm max-w-none">
-                    <div className="text-zinc-300 leading-relaxed whitespace-pre-line">
-                        {insight}
-                    </div>
+                <div className="prose prose-invert prose-sm max-w-none prose-p:text-zinc-300 prose-strong:text-white prose-li:text-zinc-300">
+                    <ReactMarkdown>{insight}</ReactMarkdown>
                     <button
                         onClick={handleGenerate}
                         className="mt-4 text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1 hover:cursor-pointer"
