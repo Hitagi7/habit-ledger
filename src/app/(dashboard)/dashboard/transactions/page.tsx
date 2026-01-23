@@ -4,6 +4,7 @@ import TransactionList from "@/components/features/transactions/TransactionList"
 import TransactionForm from "@/components/features/transactions/TransactionForm";
 import TransactionFilters from "@/components/features/transactions/TransactionFilters";
 import CategoryBreakdown from "@/components/features/transactions/CategoryBreakdown";
+import TransactionStats from "@/components/features/transactions/TransactionStats";
 import { Suspense } from "react";
 
 interface PageProps {
@@ -56,30 +57,12 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-                    <p className="text-sm text-zinc-400 mb-1">Income (This Month)</p>
-                    <p className="text-xl font-bold text-green-500">
-                        ${stats.income.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </p>
-                </div>
-                <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-                    <p className="text-sm text-zinc-400 mb-1">Expenses (This Month)</p>
-                    <p className="text-xl font-bold text-red-500">
-                        ${stats.expenses.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </p>
-                </div>
-                <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-                    <p className="text-sm text-zinc-400 mb-1">Balance</p>
-                    <p className={`text-xl font-bold ${stats.balance >= 0 ? "text-green-500" : "text-red-500"}`}>
-                        ${stats.balance.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </p>
-                </div>
-                <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-                    <p className="text-sm text-zinc-400 mb-1">Transactions</p>
-                    <p className="text-xl font-bold text-white">{stats.transactionCount}</p>
-                </div>
-            </div>
+            <TransactionStats
+                income={stats.income}
+                expenses={stats.expenses}
+                balance={stats.balance}
+                transactionCount={stats.transactionCount}
+            />
 
             {/* Filters */}
             <Suspense fallback={<div className="h-24 bg-zinc-900 rounded-xl animate-pulse" />}>

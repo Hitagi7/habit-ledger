@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { deleteTransaction } from "@/lib/actions/transactions";
+import { useCurrency } from "@/lib/contexts/CurrencyContext";
 
 interface Category {
     id: string;
@@ -27,6 +28,7 @@ interface TransactionListProps {
 }
 
 export default function TransactionList({ transactions }: TransactionListProps) {
+    const { formatCurrency } = useCurrency();
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const handleDelete = async (id: string) => {
@@ -108,10 +110,8 @@ export default function TransactionList({ transactions }: TransactionListProps) 
                                 className={`font-semibold ${transaction.type === "income" ? "text-green-500" : "text-red-500"
                                     }`}
                             >
-                                {transaction.type === "income" ? "+" : "-"}$
-                                {Number(transaction.amount).toLocaleString("en-US", {
-                                    minimumFractionDigits: 2,
-                                })}
+                                {transaction.type === "income" ? "+" : "-"}
+                                {formatCurrency(Number(transaction.amount))}
                             </span>
 
                             <button

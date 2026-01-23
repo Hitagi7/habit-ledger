@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/layout/Sidebar";
+import { CurrencyProvider } from "@/lib/contexts/CurrencyContext";
+import { getUserSettings } from "@/lib/actions/settings";
 
 export default async function DashboardLayout({
     children,
@@ -15,6 +17,8 @@ export default async function DashboardLayout({
     if (!user) {
         redirect("/login");
     }
+
+    const settings = await getUserSettings();
 
     return (
         <div className="min-h-screen bg-[#0a0a0f] flex">
@@ -40,7 +44,11 @@ export default async function DashboardLayout({
                 </header>
 
                 {/* Page content */}
-                <main className="flex-1 p-6">{children}</main>
+                <main className="flex-1 p-6">
+                    <CurrencyProvider initialCurrency={settings.currency}>
+                        {children}
+                    </CurrencyProvider>
+                </main>
             </div>
         </div>
     );

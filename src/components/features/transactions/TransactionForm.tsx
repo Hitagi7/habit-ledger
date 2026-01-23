@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createTransaction } from "@/lib/actions/transactions";
 import { createCategory, deleteCategory } from "@/lib/actions/categories";
+import { useCurrency } from "@/lib/contexts/CurrencyContext";
 
 interface Category {
     id: string;
@@ -17,6 +18,7 @@ interface TransactionFormProps {
 }
 
 export default function TransactionForm({ categories }: TransactionFormProps) {
+    const { symbol } = useCurrency();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -168,7 +170,7 @@ export default function TransactionForm({ categories }: TransactionFormProps) {
                                     Amount
                                 </label>
                                 <div className="relative">
-                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">{symbol}</span>
                                     <input
                                         type="number"
                                         step="0.01"

@@ -1,39 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
-    const [email, setEmail] = useState("");
+export default function ResetPasswordPage() {
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const supabase = createClient();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    // Check if user is legally here (has a session from the reset link)
+    // The link from email logs them in and directs here
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                // If no session, they might have navigated here directly or link expired
+                setError("Invalid or expired reset link. Please try again.");
+            }
+        };
+        checkSession();
+    }, []);
+
+    const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
-        // Like creating a client in the server for the UNIQUE user
-        const supabase = createClient();
-
-        // Sign in the user, supabase will handle the session, we just coded to give the email and password
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
+        const { error } = await supabase.auth.updateUser({
+            password: password
         });
 
-        // Error handling
         if (error) {
             setError(error.message);
             setLoading(false);
         } else {
-            // Redirect to dashboard
             router.push("/dashboard");
-            router.refresh();
         }
     };
 
@@ -41,12 +52,11 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
             <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8">
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
-                    <p className="text-zinc-400">Sign in to your account to continue</p>
+                    <h1 className="text-2xl font-bold text-white mb-2">Set New Password</h1>
+                    <p className="text-zinc-400">Enter your new password below</p>
                 </div>
 
-                {/* Once button is pressed, call handleLogin*/}
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleUpdate} className="space-y-4">
                     {error && (
                         <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-red-400 text-sm">
                             {error}
@@ -54,29 +64,8 @@ export default function LoginPage() {
                     )}
 
                     <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium text-zinc-300 mb-2"
-                        >
-                            Email
-                        </label>
-                        <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="w-full px-4 py-3 bg-zinc-800 border border-white/10 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                            placeholder="you@example.com"
-                        />
-                    </div>
-
-                    <div>
-                        <label
-                            htmlFor="password"
-                            className="block text-sm font-medium text-zinc-300 mb-2"
-                        >
-                            Password
+                        <label htmlFor="password" className="block text-sm font-medium text-zinc-300 mb-2">
+                            New Password
                         </label>
                         <input
                             id="password"
@@ -84,6 +73,23 @@ export default function LoginPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            minLength={6}
+                            className="w-full px-4 py-3 bg-zinc-800 border border-white/10 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                            placeholder="••••••••"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300 mb-2">
+                            Confirm Password
+                        </label>
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                            minLength={6}
                             className="w-full px-4 py-3 bg-zinc-800 border border-white/10 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                             placeholder="••••••••"
                         />
@@ -94,21 +100,9 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
-                        {loading ? "Signing in..." : "Sign In"}
+                        {loading ? "Updating..." : "Update Password"}
                     </button>
                 </form>
-
-                <div className="mt-6 text-center">
-                    <p className="text-zinc-400 text-sm">
-                        Don&apos;t have an account?{" "}
-                        <Link
-                            href="/signup"
-                            className="text-orange-500 hover:text-orange-400 font-medium transition-colors"
-                        >
-                            Sign up
-                        </Link>
-                    </p>
-                </div>
             </div>
         </div>
     );

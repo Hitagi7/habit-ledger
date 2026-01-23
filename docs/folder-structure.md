@@ -8,14 +8,15 @@ A comprehensive, reusable folder structure for Next.js 14+ projects using the Ap
 
 ```
 project-root/
-├── app/                    # App Router - Routes & Pages
-├── components/             # React Components
-├── lib/                    # Utilities, Configurations & Business Logic
+├── src/                    # Source Code
+│   ├── app/                # App Router - Routes & Pages
+│   ├── components/         # React Components
+│   ├── lib/                # Utilities, Configurations & Business Logic
+│   └── middleware.ts       # Next.js Middleware (or proxy.ts)
 ├── public/                 # Static Assets
 ├── docs/                   # Project Documentation
 ├── .env.local              # Environment Variables (local)
 ├── .env.example            # Environment Variables Template
-├── middleware.ts           # Next.js Middleware (or proxy.ts)
 ├── next.config.ts          # Next.js Configuration
 ├── tailwind.config.ts      # Tailwind Configuration
 ├── tsconfig.json           # TypeScript Configuration
@@ -276,7 +277,7 @@ Configure in `tsconfig.json`:
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   }
 }

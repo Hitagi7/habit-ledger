@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCurrency } from "@/lib/contexts/CurrencyContext";
 
 interface CategoryBreakdownData {
     breakdown: {
@@ -34,6 +35,7 @@ const COLORS = [
 ];
 
 export default function CategoryBreakdown({ expenseData, incomeData }: CategoryBreakdownProps) {
+    const { formatCurrency } = useCurrency();
     const [activeTab, setActiveTab] = useState<"expense" | "income">("expense");
 
     const data = activeTab === "expense" ? expenseData : incomeData;
@@ -49,8 +51,8 @@ export default function CategoryBreakdown({ expenseData, incomeData }: CategoryB
                     <button
                         onClick={() => setActiveTab("expense")}
                         className={`px-3 py-1 text-xs font-medium rounded-md hover:cursor-pointer transition-all ${activeTab === "expense"
-                                ? "bg-red-500/20 text-red-400"
-                                : "text-zinc-400 hover:text-white"
+                            ? "bg-red-500/20 text-red-400"
+                            : "text-zinc-400 hover:text-white"
                             }`}
                     >
                         Expenses
@@ -58,8 +60,8 @@ export default function CategoryBreakdown({ expenseData, incomeData }: CategoryB
                     <button
                         onClick={() => setActiveTab("income")}
                         className={`px-3 py-1 text-xs font-medium rounded-md hover:cursor-pointer transition-all ${activeTab === "income"
-                                ? "bg-green-500/20 text-green-400"
-                                : "text-zinc-400 hover:text-white"
+                            ? "bg-green-500/20 text-green-400"
+                            : "text-zinc-400 hover:text-white"
                             }`}
                     >
                         Income
@@ -71,7 +73,7 @@ export default function CategoryBreakdown({ expenseData, incomeData }: CategoryB
             <div className="mb-4">
                 <p className="text-xs text-zinc-400">Total This Month</p>
                 <p className={`text-2xl font-bold ${activeTab === "expense" ? "text-red-400" : "text-green-400"}`}>
-                    ${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                    {formatCurrency(total)}
                 </p>
             </div>
 
@@ -109,7 +111,7 @@ export default function CategoryBreakdown({ expenseData, incomeData }: CategoryB
                                     <span className="text-sm text-white truncate">{cat.name}</span>
                                     <span className={`text-sm font-medium ${activeTab === "expense" ? "text-red-400" : "text-green-400"
                                         }`}>
-                                        ${cat.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                                        {formatCurrency(cat.amount)}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between mt-0.5">
