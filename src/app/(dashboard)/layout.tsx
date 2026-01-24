@@ -23,14 +23,14 @@ export default async function DashboardLayout({
     return (
         <div className="min-h-screen bg-[#0a0a0f] flex">
             {/* Reusable Sidebar Component */}
-            <Sidebar />
+            <Sidebar user={user} />
 
             {/* Main content */}
             <div className="flex-1 flex flex-col">
                 {/* Top bar */}
                 <header className="h-16 border-b border-white/10 px-6 flex items-center justify-between">
                     <h1 className="text-lg font-semibold text-white">Dashboard</h1>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 md:hidden">
                         <span className="text-sm text-zinc-400">{user.email}</span>
                         <form action="/auth/signout" method="post">
                             <button

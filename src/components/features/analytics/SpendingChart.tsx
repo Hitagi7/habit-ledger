@@ -69,7 +69,7 @@ export default function SpendingChart({ data }: SpendingChartProps) {
                     <Tooltip
                         contentStyle={{ backgroundColor: "#18181b", borderColor: "#27272a", borderRadius: "8px" }}
                         itemStyle={{ color: "#f97316" }}
-                        formatter={(value: number) => [formatCurrency(value), "Spent"]}
+                        formatter={(value: any) => [formatCurrency(Number(value || 0)), "Spent"]}
                     />
                     <Area
                         type="monotone"

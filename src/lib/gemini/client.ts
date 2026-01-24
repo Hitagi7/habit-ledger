@@ -58,13 +58,18 @@ Keep your response concise (under 150 words). Focus on practical tips.`;
  * Generate habit improvement suggestions
  */
 export async function generateHabitInsights(data: {
-    habits: { name: string; completionRate: number; streak: number }[];
+    totalHabits: number;
+    completionRate: number;
+    topStreaks: { name: string; streak: number }[];
 }): Promise<{ data: string | null; error: string | null }> {
-    const prompt = `You are a helpful habit coach. Based on these habit statistics, provide 2-3 brief, encouraging suggestions:
+    const prompt = `You are a helpful habit coach. Analyze this user's habit performance and provide 2-3 brief, motivating insights:
 
-${data.habits.map((h) => `- ${h.name}: ${(h.completionRate * 100).toFixed(0)}% completion rate, ${h.streak} day streak`).join("\n")}
+Current Status:
+- Total Active Habits: ${data.totalHabits}
+- Avg Completion Rate: ${data.completionRate}%
+- Top Streaks: ${data.topStreaks.map(h => `${h.name} (${h.streak} days)`).join(", ") || "None yet"}
 
-Keep your response concise (under 150 words). Be encouraging and practical.`;
+Keep your response concise (under 100 words). Be encouraging but practical. Suggest 1 specific small improvement.`;
 
     return generateContent(prompt);
 }

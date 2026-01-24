@@ -3,6 +3,7 @@ import { getTransactionStats, getTransactions } from "@/lib/actions/transactions
 import { getHabitStats } from "@/lib/actions/habits";
 import { getBudgetStats } from "@/lib/actions/budgets";
 import DashboardAI from "@/components/features/ai/DashboardAI";
+import HabitAI from "@/components/features/ai/HabitAI";
 import SpendingChart from "@/components/features/analytics/SpendingChart";
 
 export default async function DashboardPage() {
@@ -160,6 +161,9 @@ export default async function DashboardPage() {
 
             {/* AI Financial Insights */}
             <DashboardAI />
+
+            {/* AI Habit Insights */}
+            <HabitAI />
         </div>
     );
 }

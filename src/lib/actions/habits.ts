@@ -252,14 +252,16 @@ export async function getHabitStats() {
         ? Math.round((totalCompleted / totalExpected) * 100)
         : 0;
 
-    // Calculate longest current streak
-    let longestStreak = 0;
-    for (const habit of habits) {
+    // Calculate stats for each habit
+    const habitDetails = await Promise.all(habits.map(async (habit) => {
         const streak = await calculateStreak(supabase, user.id, habit.id);
-        if (streak > longestStreak) {
-            longestStreak = streak;
-        }
-    }
+        return {
+            name: habit.name,
+            streak,
+        };
+    }));
+
+    const longestStreak = Math.max(...habitDetails.map(h => h.streak), 0);
 
     return {
         error: null,
@@ -268,6 +270,7 @@ export async function getHabitStats() {
             completedToday: completedToday.size,
             longestStreak,
             averageCompletion,
+            habitDetails,
         },
     };
 }

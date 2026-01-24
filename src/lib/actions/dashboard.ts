@@ -1,7 +1,8 @@
 "use server";
 
 import { getTransactionStats, getCategoryBreakdown } from "@/lib/actions/transactions";
-import { generateFinancialInsights } from "@/lib/gemini/client";
+import { getHabitStats } from "@/lib/actions/habits";
+import { generateFinancialInsights, generateHabitInsights } from "@/lib/gemini/client";
 
 export async function generateDashboardInsightsAction() {
     // 1. Gather data
@@ -26,4 +27,20 @@ export async function generateDashboardInsightsAction() {
     const result = await generateFinancialInsights(aiData);
 
     return result;
+}
+
+export async function generateHabitInsightsAction() {
+    const habits = await getHabitStats();
+
+    if (habits.error || !habits.data) {
+        return { error: "Failed to fetch habit data for analysis", data: null };
+    }
+
+    const aiData = {
+        totalHabits: habits.data.totalHabits,
+        completionRate: habits.data.averageCompletion,
+        topStreaks: habits.data.habitDetails?.sort((a, b) => b.streak - a.streak).slice(0, 3) || []
+    };
+
+    return await generateHabitInsights(aiData);
 }

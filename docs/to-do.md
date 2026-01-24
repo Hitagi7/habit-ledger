@@ -93,22 +93,21 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ## Analytics Dashboards
 
-- [ ] Spending over time chart
-- [ ] Category breakdown visualization
+- [x] Spending over time chart
+- [x] Category breakdown visualization
 - [ ] Net savings trend graph
-- [ ] Habit consistency graphs
-- [ ] Dashboard widgets/cards
+- [x] Dashboard widgets/cards
 
 ---
 
 ## AI Insights (Gemini Integration)
 
 - [x] Gemini API connection
-- [ ] Weekly spending & habit summary generation
-- [ ] Monthly summary generation
-- [ ] Smart suggestions for budget adjustments
-- [ ] Smart suggestions for habit improvements
-- [ ] Insights display on dashboard
+- [x] Weekly spending & habit summary generation
+- [x] Monthly summary generation
+- [x] Smart suggestions for budget adjustments
+- [x] Smart suggestions for habit improvements
+- [x] Insights display on dashboard
 
 ---
 

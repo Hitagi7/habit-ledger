@@ -58,7 +58,7 @@ const navItems: NavItem[] = [
     },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ user }: { user?: { email?: string } }) {
     const pathname = usePathname();
 
     // Check if a nav item is active
@@ -72,7 +72,7 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="w-64 border-r border-white/10 p-4 hidden md:block">
+        <aside className="w-64 border-r border-white/10 p-4 hidden md:flex flex-col h-screen sticky top-0">
             {/* Logo */}
             <Link href="/dashboard" className="flex items-center gap-2 mb-8">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
@@ -82,7 +82,7 @@ export default function Sidebar() {
             </Link>
 
             {/* Navigation */}
-            <nav className="space-y-2">
+            <nav className="space-y-2 flex-1">
                 {navItems.map((item) => (
                     <Link
                         key={item.href}
@@ -97,6 +97,32 @@ export default function Sidebar() {
                     </Link>
                 ))}
             </nav>
+
+            {/* User Profile (Bottom) */}
+            {user && (
+                <div className="mt-auto pt-4 border-t border-white/10">
+                    <div className="flex items-center gap-3 px-2 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs text-white font-medium">
+                            {user.email?.[0].toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white truncate">{user.email}</p>
+                            <p className="text-xs text-zinc-500">Free Plan</p>
+                        </div>
+                    </div>
+                    <form action="/auth/signout" method="post">
+                        <button
+                            type="submit"
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-zinc-400 hover:text-white transition-colors hover:bg-white/5 rounded-lg"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Sign out
+                        </button>
+                    </form>
+                </div>
+            )}
         </aside>
     );
 }
