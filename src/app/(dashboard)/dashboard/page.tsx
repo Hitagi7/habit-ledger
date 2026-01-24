@@ -1,29 +1,32 @@
 import { createClient } from "@/lib/supabase/server";
-import { getTransactionStats, getTransactions } from "@/lib/actions/transactions";
+import { getTransactionStats, getTransactions, getSavingsStats } from "@/lib/actions/transactions";
 import { getHabitStats } from "@/lib/actions/habits";
 import { getBudgetStats } from "@/lib/actions/budgets";
 import DashboardAI from "@/components/features/ai/DashboardAI";
 import HabitAI from "@/components/features/ai/HabitAI";
 import SpendingChart from "@/components/features/analytics/SpendingChart";
+import NetSavingsChart from "@/components/features/analytics/NetSavingsChart";
 
 export default async function DashboardPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     // Fetch Data in parallel
-    const [statsData, transactionsData, habitsData, budgetsData] = await Promise.all([
+    const [statsData, transactionsData, habitsData, budgetsData, savingsData] = await Promise.all([
         getTransactionStats(),
         getTransactions({
             startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0]
         }),
         getHabitStats(),
-        getBudgetStats()
+        getBudgetStats(),
+        getSavingsStats(6) // Last 6 months
     ]);
 
     // Process Transaction Data
     const balance = statsData.data?.balance || 0;
     const transactionCount = statsData.data?.transactionCount || 0;
     const recentTransactions = transactionsData.data || [];
+    const savingsTrend = savingsData.data || [];
 
     // Process Habit Data
     const activeHabits = habitsData.data?.totalHabits || 0;
@@ -61,9 +64,9 @@ export default async function DashboardPage() {
     const habitsCardClasses = "bg-amber-900/10 border-amber-500/20 hover:border-amber-500/30";
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-fade-in-up">
             {/* Welcome Section */}
-            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8 flex flex-col justify-center bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900/50 animate-fade-in-up">
+            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8 flex flex-col justify-center bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900/50">
                 <div className="flex justify-between items-start">
                     <div className="flex items-center gap-4">
                         {user?.user_metadata?.avatar_url ? (
@@ -95,7 +98,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up delay-100">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 delay-100 animate-fade-in-up">
                 <div className={`${balanceCardClasses} border rounded-xl p-6 transition-colors duration-300`}>
                     <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center">
@@ -161,15 +164,25 @@ export default async function DashboardPage() {
                 </div>
             </div>
 
-            {/* Analytics Chart Section */}
-            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 animate-fade-in-up delay-200">
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-white">Spending Trends</h3>
-                    <select className="bg-zinc-800 border border-white/10 text-xs text-zinc-300 rounded-lg px-3 py-1.5 focus:outline-none hover:bg-zinc-700/50 transition-colors">
-                        <option>Last 30 days</option>
-                    </select>
+            {/* Analytics Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 delay-200 animate-fade-in-up">
+                {/* Spending Trends */}
+                <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-semibold text-white">Daily Spending</h3>
+                        <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">Last 30 Days</span>
+                    </div>
+                    <SpendingChart data={recentTransactions} />
                 </div>
-                <SpendingChart data={recentTransactions} />
+
+                {/* Net Savings Trend */}
+                <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-semibold text-white">Net Savings</h3>
+                        <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">Last 6 Months</span>
+                    </div>
+                    <NetSavingsChart data={savingsTrend} />
+                </div>
             </div>
 
             {/* AI Financial Insights */}

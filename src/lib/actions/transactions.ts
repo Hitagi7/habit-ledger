@@ -276,3 +276,68 @@ export async function getCategoryBreakdown(type: "income" | "expense" = "expense
     };
 }
 
+// Get savings stats (Income vs Expense over time)
+export async function getSavingsStats(months = 6) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Not authenticated", data: null };
+    }
+
+    // Date range: Last X months
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1).toISOString().split("T")[0];
+
+    const { data, error } = await supabase
+        .from("transactions")
+        .select("amount, type, date")
+        .eq("user_id", user.id)
+        .gte("date", startDate)
+        .order("date", { ascending: true });
+
+    if (error) {
+        return { error: error.message, data: null };
+    }
+
+    // Group by Month
+    const monthlyStats: Record<string, { income: number; expenses: number; savings: number }> = {};
+    const monthOrder: string[] = [];
+
+    // Initialize months to ensure no gaps (optional, but good for charts)
+    for (let i = 0; i < months; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - months + 1 + i, 1);
+        const monthKey = d.toLocaleString("default", { month: "short" });
+        if (!monthlyStats[monthKey]) {
+            monthlyStats[monthKey] = { income: 0, expenses: 0, savings: 0 };
+            monthOrder.push(monthKey);
+        }
+    }
+
+    data.forEach((t) => {
+        const date = new Date(t.date);
+        const monthKey = date.toLocaleString("default", { month: "short" });
+        const amount = Number(t.amount);
+
+        if (monthlyStats[monthKey]) {
+            if (t.type === "income") {
+                monthlyStats[monthKey].income += amount;
+            } else if (t.type === "expense") {
+                monthlyStats[monthKey].expenses += amount;
+            }
+        }
+    });
+
+    // Calculate savings and format for chart
+    const chartData = monthOrder.map((month) => {
+        const { income, expenses } = monthlyStats[month];
+        return {
+            month,
+            income,
+            expenses,
+            savings: income - expenses,
+        };
+    });
+
+    return { error: null, data: chartData };
+}

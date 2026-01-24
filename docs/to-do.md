@@ -95,7 +95,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 - [x] Spending over time chart
 - [x] Category breakdown visualization
-- [ ] Net savings trend graph
+- [x] Net savings trend graph
 - [x] Dashboard widgets/cards
 
 ---
@@ -126,7 +126,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [ ] Vercel deployment configuration
 - [x] Supabase production project setup
 - [ ] Environment variables on Vercel
-- [ ] Production build testing
+- [x] Production build testing
 
 ---
 
@@ -134,7 +134,7 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 - [ ] Shared/family budgets
 - [ ] Group habit challenges
-- [ ] Mobile-friendly PWA
+- [x] Mobile-friendly PWA (Manifest & Meta setup)
 - [ ] TWA Android wrapper
 
 ---
