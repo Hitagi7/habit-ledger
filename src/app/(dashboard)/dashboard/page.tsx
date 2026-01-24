@@ -65,13 +65,26 @@ export default async function DashboardPage() {
             {/* Welcome Section */}
             <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8 flex flex-col justify-center bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900/50">
                 <div className="flex justify-between items-start">
-                    <div>
-                        <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
-                            Welcome back! 👋
-                        </h2>
-                        <p className="text-zinc-400 text-lg">
-                            You&apos;re signed in as <span className="text-white font-medium">{user?.email}</span>
-                        </p>
+                    <div className="flex items-center gap-4">
+                        {user?.user_metadata?.avatar_url ? (
+                            <img
+                                src={user.user_metadata.avatar_url}
+                                alt="Profile"
+                                className="w-16 h-16 rounded-full object-cover border-2 border-white/10"
+                            />
+                        ) : (
+                            <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center border-2 border-white/10 text-2xl font-bold text-zinc-500">
+                                {user?.email?.[0]?.toUpperCase() || "U"}
+                            </div>
+                        )}
+                        <div>
+                            <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                                Welcome back!
+                            </h2>
+                            <p className="text-zinc-400 text-lg">
+                                You&apos;re signed in as <span className="text-white font-medium">{user?.user_metadata?.full_name || user?.email}</span>
+                            </p>
+                        </div>
                     </div>
                     <div className="text-right hidden sm:block">
                         <p className="text-base text-zinc-400 font-medium">

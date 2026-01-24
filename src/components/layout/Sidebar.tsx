@@ -58,7 +58,7 @@ const navItems: NavItem[] = [
     },
 ];
 
-export default function Sidebar({ user }: { user?: { email?: string } }) {
+export default function Sidebar({ user }: { user?: { email?: string; user_metadata?: { full_name?: string; avatar_url?: string } } }) {
     const pathname = usePathname();
 
     // Check if a nav item is active
@@ -70,6 +70,10 @@ export default function Sidebar({ user }: { user?: { email?: string } }) {
         }
         return pathname.startsWith(href);
     };
+
+    const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User";
+    const avatarUrl = user?.user_metadata?.avatar_url;
+    const initial = (user?.email?.[0] || "U").toUpperCase();
 
     return (
         <aside className="w-64 border-r border-white/10 p-4 hidden md:flex flex-col h-screen sticky top-0">
@@ -101,15 +105,22 @@ export default function Sidebar({ user }: { user?: { email?: string } }) {
             {/* User Profile (Bottom) */}
             {user && (
                 <div className="mt-auto pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-3 px-2 mb-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs text-white font-medium">
-                            {user.email?.[0].toUpperCase()}
-                        </div>
+                    <Link
+                        href="/dashboard/settings"
+                        className="flex items-center gap-3 px-2 mb-3 hover:bg-white/5 p-2 rounded-lg transition-colors group"
+                    >
+                        {avatarUrl ? (
+                            <img src={avatarUrl} alt={displayName} className="w-8 h-8 rounded-full object-cover bg-zinc-800" />
+                        ) : (
+                            <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs text-white font-medium group-hover:bg-zinc-700 transition-colors">
+                                {initial}
+                            </div>
+                        )}
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">{user.email}</p>
-                            <p className="text-xs text-zinc-500">Free Plan</p>
+                            <p className="text-sm font-medium text-white truncate group-hover:text-orange-400 transition-colors">{displayName}</p>
+                            <p className="text-xs text-zinc-500 truncate">{user.email}</p>
                         </div>
-                    </div>
+                    </Link>
                     <form action="/auth/signout" method="post">
                         <button
                             type="submit"
