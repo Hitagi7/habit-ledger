@@ -190,6 +190,41 @@ Or use **Geist Sans** from Next.js for a modern, clean look.
 }
 ```
 
+### Entry Animations
+
+```css
+/* Fade In Up */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Slide In Left */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+```
+
+### Animation Delays
+
+Use these utilities to stagger animations for children elements:
+
+| Class | Delay |
+|-------|-------|
+| `.delay-100` | 100ms |
+| `.delay-200` | 200ms |
+| `.delay-300` | 300ms |
+| `.delay-500` | 500ms |
+
 ### Pulse Ring
 
 ```css

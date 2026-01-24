@@ -57,20 +57,24 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Stats Cards */}
-            <TransactionStats
-                income={stats.income}
-                expenses={stats.expenses}
-                balance={stats.balance}
-                transactionCount={stats.transactionCount}
-            />
+            <div className="delay-100 animate-fade-in-up">
+                <TransactionStats
+                    income={stats.income}
+                    expenses={stats.expenses}
+                    balance={stats.balance}
+                    transactionCount={stats.transactionCount}
+                />
+            </div>
 
             {/* Filters */}
             <Suspense fallback={<div className="h-24 bg-zinc-900 rounded-xl animate-pulse" />}>
-                <TransactionFilters categories={categories} />
+                <div className="delay-200 animate-fade-in-up">
+                    <TransactionFilters categories={categories} />
+                </div>
             </Suspense>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 delay-300 animate-fade-in-up">
                 {/* Transaction List - takes 2 columns on large screens */}
                 <div className="lg:col-span-2">
                     <TransactionList

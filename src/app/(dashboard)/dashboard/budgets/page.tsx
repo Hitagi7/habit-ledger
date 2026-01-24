@@ -32,7 +32,7 @@ export default async function BudgetsPage() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 delay-100 animate-fade-in-up">
                 <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
                     <p className="text-sm text-zinc-400 mb-1">Total Budgets</p>
                     <p className="text-xl font-bold text-white">{stats.totalBudgets}</p>
@@ -57,7 +57,7 @@ export default async function BudgetsPage() {
             </div>
 
             {/* Budget List */}
-            <div className="bg-zinc-900/50 border border-white/10 rounded-xl">
+            <div className="bg-zinc-900/50 border border-white/10 rounded-xl delay-200 animate-fade-in-up">
                 <div className="p-4 border-b border-white/10">
                     <h2 className="text-lg font-semibold text-white">Your Budgets</h2>
                 </div>

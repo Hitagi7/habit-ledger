@@ -63,7 +63,7 @@ export default async function DashboardPage() {
     return (
         <div className="space-y-6">
             {/* Welcome Section */}
-            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8 flex flex-col justify-center bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900/50">
+            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8 flex flex-col justify-center bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900/50 animate-fade-in-up">
                 <div className="flex justify-between items-start">
                     <div className="flex items-center gap-4">
                         {user?.user_metadata?.avatar_url ? (
@@ -79,7 +79,7 @@ export default async function DashboardPage() {
                         )}
                         <div>
                             <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
-                                Welcome back!
+                                Welcome back! 👋
                             </h2>
                             <p className="text-zinc-400 text-lg">
                                 You&apos;re signed in as <span className="text-white font-medium">{user?.user_metadata?.full_name || user?.email}</span>
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up delay-100">
                 <div className={`${balanceCardClasses} border rounded-xl p-6 transition-colors duration-300`}>
                     <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center">
@@ -162,7 +162,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Analytics Chart Section */}
-            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6">
+            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 animate-fade-in-up delay-200">
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-semibold text-white">Spending Trends</h3>
                     <select className="bg-zinc-800 border border-white/10 text-xs text-zinc-300 rounded-lg px-3 py-1.5 focus:outline-none hover:bg-zinc-700/50 transition-colors">
@@ -173,10 +173,14 @@ export default async function DashboardPage() {
             </div>
 
             {/* AI Financial Insights */}
-            <DashboardAI />
+            <div className="animate-fade-in-up delay-300">
+                <DashboardAI />
+            </div>
 
             {/* AI Habit Insights */}
-            <HabitAI />
+            <div className="animate-fade-in-up delay-400">
+                <HabitAI />
+            </div>
         </div>
     );
 }
