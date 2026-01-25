@@ -1,10 +1,9 @@
-import { getTransactions, getTransactionStats, getCategoryBreakdown } from "@/lib/actions/transactions";
 import { getCategories } from "@/lib/actions/categories";
-import TransactionList from "@/components/features/transactions/TransactionList";
 import TransactionForm from "@/components/features/transactions/TransactionForm";
 import TransactionFilters from "@/components/features/transactions/TransactionFilters";
-import CategoryBreakdown from "@/components/features/transactions/CategoryBreakdown";
-import TransactionStats from "@/components/features/transactions/TransactionStats";
+import TransactionStats from "./components/TransactionStats";
+import TransactionList from "./components/TransactionList";
+import TransactionBreakdown from "./components/TransactionBreakdown";
 import { Suspense } from "react";
 
 interface PageProps {
@@ -17,33 +16,9 @@ interface PageProps {
 }
 
 export default async function TransactionsPage({ searchParams }: PageProps) {
-    // Await the searchParams promise
     const params = await searchParams;
-
-    // Build filters from search params
-    const filters = {
-        type: params.type as "income" | "expense" | undefined,
-        categoryId: params.category,
-        startDate: params.start,
-        endDate: params.end,
-    };
-
-    const [transactionsResult, categoriesResult, statsResult, expenseBreakdownResult, incomeBreakdownResult] = await Promise.all([
-        getTransactions(filters),
-        getCategories(),
-        getTransactionStats(),
-        getCategoryBreakdown("expense"),
-        getCategoryBreakdown("income"),
-    ]);
-
-    const transactions = transactionsResult.data || [];
+    const categoriesResult = await getCategories();
     const categories = categoriesResult.data || [];
-    const stats = statsResult.data || { income: 0, expenses: 0, balance: 0, transactionCount: 0 };
-    const expenseBreakdown = expenseBreakdownResult.data;
-    const incomeBreakdown = incomeBreakdownResult.data;
-
-    // Check if any filters are active
-    const hasFilters = params.type || params.category || params.start || params.end;
 
     return (
         <div className="space-y-6">
@@ -57,43 +32,33 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Stats Cards */}
-            <div className="delay-100 animate-fade-in-up">
-                <TransactionStats
-                    income={stats.income}
-                    expenses={stats.expenses}
-                    balance={stats.balance}
-                    transactionCount={stats.transactionCount}
-                />
-            </div>
-
-            {/* Filters */}
-            <Suspense fallback={<div className="h-24 bg-zinc-900 rounded-xl animate-pulse" />}>
-                <div className="delay-200 animate-fade-in-up">
-                    <TransactionFilters categories={categories} />
-                </div>
+            <Suspense fallback={<div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-pulse">
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} className="bg-zinc-900 border border-white/10 rounded-xl h-24" />
+                ))}
+            </div>}>
+                <TransactionStats />
             </Suspense>
 
+            {/* Filters */}
+            <div className="delay-200 animate-fade-in-up">
+                <TransactionFilters categories={categories} />
+            </div>
+
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 delay-300 animate-fade-in-up">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Transaction List - takes 2 columns on large screens */}
                 <div className="lg:col-span-2">
-                    <TransactionList
-                        transactions={transactions}
-                        categories={categories}
-                    />
-                    {hasFilters && transactions.length === 0 && (
-                        <div className="mt-4 text-center text-zinc-400 text-sm">
-                            No transactions match your filters
-                        </div>
-                    )}
+                    <Suspense fallback={<div className="bg-zinc-900 border border-white/10 rounded-xl h-96 animate-pulse" />}>
+                        <TransactionList searchParams={params} />
+                    </Suspense>
                 </div>
 
                 {/* Category Breakdown - Sidebar */}
                 <div className="lg:col-span-1">
-                    <CategoryBreakdown
-                        expenseData={expenseBreakdown}
-                        incomeData={incomeBreakdown}
-                    />
+                    <Suspense fallback={<div className="bg-zinc-900 border border-white/10 rounded-xl h-64 animate-pulse" />}>
+                        <TransactionBreakdown />
+                    </Suspense>
                 </div>
             </div>
         </div>

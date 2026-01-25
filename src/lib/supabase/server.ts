@@ -26,24 +26,3 @@ export async function createClient() {
         }
     );
 }
-
-export async function createClientWithToken(accessToken: string) {
-    return createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            global: {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            },
-            cookies: {
-                getAll() {
-                    return [];
-                },
-                setAll(cookiesToSet) {
-                },
-            },
-        }
-    );
-}
