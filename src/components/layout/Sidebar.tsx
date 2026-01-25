@@ -79,9 +79,7 @@ export default function Sidebar({ user }: { user?: { email?: string; user_metada
         <aside className="w-64 border-r border-white/10 p-4 hidden md:flex flex-col h-screen sticky top-0 animate-slide-in-left">
             {/* Logo */}
             <Link href="/dashboard" className="flex items-center gap-2 mb-8">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">HL</span>
-                </div>
+                <img src="/logo.png" alt="Habit Ledger" className="w-8 h-8 object-contain" />
                 <span className="font-semibold text-lg text-white">Habit Ledger</span>
             </Link>
 

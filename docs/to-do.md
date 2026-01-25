@@ -111,16 +111,6 @@ This document tracks implementation progress based on [overview.md](./overview.m
 
 ---
 
-## Notifications & Reminders (Optional)
-
-- [ ] Supabase Edge Functions setup
-- [ ] Cron job for scheduled tasks
-- [ ] Email notification system
-- [ ] Reminder notifications for habits
-- [ ] Weekly/monthly summary emails
-
----
-
 ## Deployment
 
 - [ ] Vercel deployment configuration
