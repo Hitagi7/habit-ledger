@@ -105,7 +105,7 @@ export default function BudgetCard({ budget, categories }: BudgetCardProps) {
                         </span>
                         {budget.isOverBudget && (
                             <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">
-                                Over Budget!
+                                over budget!
                             </span>
                         )}
                     </div>
