@@ -1,7 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+import { getCachedBudgets } from "./cached/budgets";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // Get all budgets for the current user with spending progress
 export async function getBudgets() {
@@ -10,6 +13,17 @@ export async function getBudgets() {
 
     if (!user) {
         return { error: "Not authenticated", data: null };
+    }
+
+    // Attempt to use cached version
+    const adminClient = createAdminClient();
+    if (adminClient) {
+        try {
+            const data = await getCachedBudgets(user.id);
+            return { error: null, data };
+        } catch (e) {
+            console.error("Cache fetch failed", e);
+        }
     }
 
     // Get budgets with category info
@@ -154,6 +168,7 @@ export async function createBudget(formData: {
 
     revalidatePath("/dashboard/budgets");
     revalidatePath("/dashboard");
+    revalidateTag("budgets");
     return { error: null, data };
 }
 
@@ -190,6 +205,7 @@ export async function updateBudget(
 
     revalidatePath("/dashboard/budgets");
     revalidatePath("/dashboard");
+    revalidateTag("budgets");
     return { error: null, data };
 }
 
@@ -214,5 +230,6 @@ export async function deleteBudget(id: string) {
 
     revalidatePath("/dashboard/budgets");
     revalidatePath("/dashboard");
+    revalidateTag("budgets");
     return { error: null, data: null };
 }

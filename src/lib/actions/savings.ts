@@ -1,7 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+import { getCachedSavings } from "./cached/savings";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function getSavings() {
     const supabase = await createClient();
@@ -9,6 +12,17 @@ export async function getSavings() {
 
     if (!user) {
         return { error: "Not authenticated", data: null };
+    }
+
+    // Attempt to use cached version
+    const adminClient = createAdminClient();
+    if (adminClient) {
+        try {
+            const data = await getCachedSavings(user.id);
+            return { error: null, data };
+        } catch (e) {
+            console.error("Cache fetch failed", e);
+        }
     }
 
     const { data, error } = await supabase
@@ -59,6 +73,7 @@ export async function createSaving(formData: {
 
     revalidatePath("/dashboard/budgets");
     revalidatePath("/dashboard/budgets/savings");
+    revalidateTag("savings");
     return { error: null, data };
 }
 
@@ -107,6 +122,7 @@ export async function updateSaving(
 
     revalidatePath("/dashboard/budgets");
     revalidatePath("/dashboard/budgets/savings");
+    revalidateTag("savings");
     return { error: null, data };
 }
 
@@ -130,5 +146,6 @@ export async function deleteSaving(id: string) {
 
     revalidatePath("/dashboard/budgets");
     revalidatePath("/dashboard/budgets/savings");
+    revalidateTag("savings");
     return { error: null, data: null };
 }

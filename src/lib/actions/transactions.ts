@@ -1,7 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+import { getCachedTransactions } from "./cached/transactions";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // Get all transactions for the current user
 export async function getTransactions(filters?: {
@@ -15,6 +18,17 @@ export async function getTransactions(filters?: {
 
     if (!user) {
         return { error: "Not authenticated", data: null };
+    }
+
+    // Attempt to use cached version if Admin Client is available
+    const adminClient = createAdminClient();
+    if (adminClient) {
+        try {
+            const data = await getCachedTransactions(user.id, filters);
+            return { error: null, data: data as any[] };
+        } catch (e) {
+            console.error("Cache fetch failed, falling back to dynamic fetch", e);
+        }
     }
 
     // Table from supabase
@@ -157,6 +171,8 @@ export async function deleteTransaction(id: string) {
     return { error: null, success: true };
 }
 
+import { getCachedTransactionStats } from "./cached/transactions";
+
 // Get transaction stats
 export async function getTransactionStats() {
     const supabase = await createClient();
@@ -164,6 +180,17 @@ export async function getTransactionStats() {
 
     if (!user) {
         return { error: "Not authenticated", data: null };
+    }
+
+    // Attempt to use cached version if Admin Client is available
+    const adminClient = createAdminClient();
+    if (adminClient) {
+        try {
+            const data = await getCachedTransactionStats(user.id);
+            return { error: null, data };
+        } catch (e) {
+            console.error("Cache fetch failed, falling back to dynamic fetch", e);
+        }
     }
 
     // Get current month's start and end dates
