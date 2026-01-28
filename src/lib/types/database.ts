@@ -143,6 +143,47 @@ export type Database = {
                     user_id?: string
                 }
             }
+            savings: {
+                Row: {
+                    id: string
+                    user_id: string
+                    name: string
+                    target_amount: number
+                    current_amount: number
+                    target_date: string | null
+                    description: string | null
+                    color: string | null
+                    icon: string | null
+                    created_at: string | null
+                    updated_at: string | null
+                }
+                Insert: {
+                    id?: string
+                    user_id: string
+                    name: string
+                    target_amount: number
+                    current_amount?: number
+                    target_date?: string | null
+                    description?: string | null
+                    color?: string | null
+                    icon?: string | null
+                    created_at?: string | null
+                    updated_at?: string | null
+                }
+                Update: {
+                    id?: string
+                    user_id?: string
+                    name?: string
+                    target_amount?: number
+                    current_amount?: number
+                    target_date?: string | null
+                    description?: string | null
+                    color?: string | null
+                    icon?: string | null
+                    created_at?: string | null
+                    updated_at?: string | null
+                }
+            }
             transactions: {
                 Row: {
                     amount: number

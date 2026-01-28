@@ -74,6 +74,12 @@ This document tracks implementation progress based on [overview.md](./overview.m
 - [x] Budget progress visualization
 - [x] Edit/delete budgets
 
+### Savings Management
+- [x] Create savings goal
+- [x] Track progress towards goal
+- [x] Add/remove funds from savings
+- [x] Budget/Savings page integration
+
 ---
 
 ## Habit Tracking
